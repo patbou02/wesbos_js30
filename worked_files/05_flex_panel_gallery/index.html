@@ -139,7 +139,6 @@
   }
 
   // TODO 1: when clicking a non expanded panel while another expanded panel is present, remove 'open' and 'open-active' classes so that opening one panel will close a previously opened panel.
-  // TODO 2: convert functions to arrow functions
 
   panels.forEach(panel => panel.addEventListener('click', toggleOpen));
   panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
