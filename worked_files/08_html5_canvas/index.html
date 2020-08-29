@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+  // 1. Define canvas and set to 100% of browser width/height
+  const canvas = document.querySelector('#draw');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  // 2. Set canvas properties and flags
+  ctx.strokeStyle = '#BADA55';
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 25;
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+  let hue   = 0;
+  let direction = true;
+
+  function draw(e) {
+    if (!isDrawing) return; // stop function from running when not moused down
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY); // start from
+    ctx.lineTo(e.offsetX, e.offsetY); // go to
+    ctx.stroke();
+    //lastX = e.offsetX;
+    //lastY = e.offsetY;
+    [lastX, lastY] = [e.offsetX, e.offsetY]; // do in one line same as previous two lines. Called 'destructuring an array'.
+    hue++;
+    console.log(hue);
+    if (hue >= 360) {
+      hue = 0;
+    }
+    if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+      direction = !direction;
+    }
+    direction ? ctx.lineWidth++ : ctx.lineWidth--;
+  }
+
+  canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY]; // reset lastX and lastY to be whatever offsetX and offsetY is
+  });
+
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseout', () => isDrawing = false);
+</script>
+
+<style>
+  html, body { margin: 0; }
+</style>
+
+<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+</body>
+</html>
