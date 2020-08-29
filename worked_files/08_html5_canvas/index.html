@@ -21,10 +21,12 @@
   let isDrawing = false;
   let lastX = 0;
   let lastY = 0;
+  let hue   = 0;
+  let direction = true;
 
   function draw(e) {
     if (!isDrawing) return; // stop function from running when not moused down
-    console.log(e);
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
     ctx.beginPath();
     ctx.moveTo(lastX, lastY); // start from
     ctx.lineTo(e.offsetX, e.offsetY); // go to
@@ -32,6 +34,15 @@
     //lastX = e.offsetX;
     //lastY = e.offsetY;
     [lastX, lastY] = [e.offsetX, e.offsetY]; // do in one line same as previous two lines. Called 'destructuring an array'.
+    hue++;
+    console.log(hue);
+    if (hue >= 360) {
+      hue = 0;
+    }
+    if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+      direction = !direction;
+    }
+    direction ? ctx.lineWidth++ : ctx.lineWidth--;
   }
 
   canvas.addEventListener('mousedown', (e) => {
