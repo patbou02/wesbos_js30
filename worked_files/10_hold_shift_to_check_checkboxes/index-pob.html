@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hold Shift to Check Multiple Checkboxes</title>
+</head>
+<body>
+  <style>
+
+    html {
+      font-family: sans-serif;
+      background: #ffc600;
+    }
+
+    .inbox {
+      max-width: 400px;
+      padding-left: 0;
+      margin: 50px auto;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #F1F1F1;
+    }
+
+    .item:last-child {
+      border-bottom: 0;
+    }
+
+    input:checked + p {
+      background: #F9F9F9;
+      text-decoration: line-through;
+    }
+
+    input[type="checkbox"] {
+      margin: 20px;
+    }
+
+    p {
+      margin: 0;
+      padding: 20px;
+      transition: background 0.2s;
+      flex: 1;
+      font-family:'helvetica neue';
+      font-size: 20px;
+      font-weight: 200;
+      border-left: 1px solid #D1E2FF;
+    }
+
+    .reset {
+      display: block;
+      margin: 0 auto;
+      padding: 5px 25px;
+      font-family:'helvetica neue';
+      font-size: 20px;
+      font-weight: 200;
+      border: 0;
+      border-radius: 5px;
+      box-shadow: 5px 5px 0 rgba(0,0,0,0.1);
+    }
+    .reset:hover {
+      cursor: pointer;
+      background-color: #3BC1AC;
+      box-shadow: 5px 5px 0 rgba(0,0,0,0.5);
+    }
+  </style>
+   <!--
+   The following is a common layout you would see in an email client.
+
+   When a user clicks a checkbox, holds Shift, and then clicks another checkbox a few rows down, all the checkboxes inbetween those two checkboxes should be checked.
+
+  -->
+  <ul class="inbox">
+    <li class="item">
+      <input type="checkbox">
+      <p>This is an inbox layout.</p>
+    </li>
+    <li class="item">
+      <input type="checkbox">
+      <p>Check one item</p>
+    </li>
+    <li class="item">
+      <input type="checkbox">
+      <p>Hold down your Shift key</p>
+    </li>
+    <li class="item">
+      <input type="checkbox">
+      <p>Check a lower item</p>
+    </li>
+    <li class="item">
+      <input type="checkbox">
+      <p>Everything in between should also be set to checked</p>
+    </li>
+    <li class="item">
+      <input type="checkbox">
+      <p>Try to do it without any libraries</p>
+    </li>
+    <li class="item">
+      <input type="checkbox">
+      <p>Just regular JavaScript</p>
+    </li>
+    <li class="item">
+      <input type="checkbox">
+      <p>Good Luck!</p>
+    </li>
+    <li class="item">
+      <input type="checkbox">
+      <p>Don't forget to tweet your result!</p>
+    </li>
+  </ul>
+  <input type="button" value="Reset Checkboxes" class="reset">
+<script>
+  // 1. add event listener for 'shift' key hold
+  // 2. add event listener for 'click'
+  // 3. detect last checkbox that was just checked
+  // 4. if checkbox checked and shift key pressed, detect next checkbox
+  // 5. loop thru checkboxes starting from last and next (between the shift key) and make all checkboxes checked
+
+  // Event Listeners
+  // detect 'shift'
+  const checkShiftKeyPress = e => e.shiftKey;
+  document.addEventListener('keydown', e => checkShiftKeyPress(e));
+
+  // detect 'click'
+  let checkboxes = document.querySelectorAll('.inbox input');
+  checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('click', e => {
+      let currentPos = getPosition(e.target.parentElement);
+      if (e.target.checked) {
+        if (checkShiftKeyPress(e)) {
+          (position.start !== currentPos) ? position.end = currentPos : position.start = currentPos;
+        } else {
+          position.start = currentPos;
+        }
+      }
+
+      console.log(position);
+      if (position.start && position.end) {
+        toggleCheckboxes(position.start, position.end);
+      }
+    });
+  });
+
+  let position = {
+    start: null,
+    end: null,
+  };
+
+  // Get last checked checkbox position
+  function getPosition(elem) {
+    let listItems = [...elem.parentElement.children];
+    return listItems.indexOf(elem);
+  }
+
+  // Toggle Checkboxes
+  function toggleCheckboxes(start, end) {
+    if (start < end) {
+      for (let i = start; i <= end; i++) {
+        if (checkboxes[i].checked === false) {
+          checkboxes[i].checked = true;
+        }
+      }
+    } else {
+      for (let i = end; i >= start; i--) {
+        if (checkboxes[i].checked === false) {
+          checkboxes[i].checked = true;
+        }
+      }
+    }
+  }
+
+  // Uncheck checkboxes
+  document.querySelector('.reset').addEventListener('click', e => {
+    checkboxes.forEach(checkbox => checkbox.checked = false);
+    position.start = null;
+    position.end = null;
+    console.clear();
+  });
+
+</script>
+
+  <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+</body>
+</html>
