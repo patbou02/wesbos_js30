@@ -114,10 +114,70 @@
   </ul>
   <input type="button" value="Reset Checkboxes" class="reset">
 <script>
+  // 1. add event listener for 'shift' key hold
+  // 2. add event listener for 'click'
+  // 3. detect last checkbox that was just checked
+  // 4. if checkbox checked and shift key pressed, detect next checkbox
+  // 5. loop thru checkboxes starting from last and next (between the shift key) and make all checkboxes checked
 
-  // Reset checkboxes
+  // Event Listeners
+  // detect 'shift'
+  const checkShiftKeyPress = e => e.shiftKey;
+  document.addEventListener('keydown', e => checkShiftKeyPress(e));
+
+  // detect 'click'
+  let checkboxes = document.querySelectorAll('.inbox input');
+  checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('click', e => {
+      let currentPos = getPosition(e.target.parentElement);
+      if (e.target.checked) {
+        if (checkShiftKeyPress(e)) {
+          (position.start !== currentPos) ? position.end = currentPos : position.start = currentPos;
+        } else {
+          position.start = currentPos;
+        }
+      }
+
+      console.log(position);
+      if (position.start && position.end) {
+        toggleCheckboxes(position.start, position.end);
+      }
+    });
+  });
+
+  let position = {
+    start: null,
+    end: null,
+  };
+
+  // Get last checked checkbox position
+  function getPosition(elem) {
+    let listItems = [...elem.parentElement.children];
+    return listItems.indexOf(elem);
+  }
+
+  // Toggle Checkboxes
+  function toggleCheckboxes(start, end) {
+    if (start < end) {
+      for (let i = start; i <= end; i++) {
+        if (checkboxes[i].checked === false) {
+          checkboxes[i].checked = true;
+        }
+      }
+    } else {
+      for (let i = end; i >= start; i--) {
+        if (checkboxes[i].checked === false) {
+          checkboxes[i].checked = true;
+        }
+      }
+    }
+  }
+
+  // Uncheck checkboxes
   document.querySelector('.reset').addEventListener('click', e => {
-    document.querySelectorAll('.inbox input').forEach(checkbox => checkbox.checked = false);
+    checkboxes.forEach(checkbox => checkbox.checked = false);
+    position.start = null;
+    position.end = null;
     console.clear();
   });
 
