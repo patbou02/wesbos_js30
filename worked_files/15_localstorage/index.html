@@ -67,11 +67,33 @@
     }).join(''); // Join all Array elements into one single string.
   }
 
+  function toggleDone(e) {
+    // Skip this unless it is an input.
+    if (!e.target.matches('input')) return;
+
+    const el = e.target;
+    const index = el.dataset.index;
+
+    // Set 'done' attribute of Object within array equal to its opposite.
+    items[index].done = !items[index].done;
+
+    // Update and overwrite localStorage item.
+    localStorage.setItem('items', JSON.stringify(items));
+
+    // Populate list once again.
+    populateList(items, itemsList);
+  }
+
   // Listen for Submit event.
   addItems.addEventListener('submit', addItem);
 
+  // Use event delegation on list parent item so this works even on yet existing children elements.
+  itemsList.addEventListener('click', toggleDone);
+
   // On page load run populateList.
   populateList(items, itemsList);
+
+  // TODO: Add a 'clear all' or 'uncheck all' button responsible for clearing the Local Storage item.
 
 </script>
 
