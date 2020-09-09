@@ -28,7 +28,7 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem('items')) || []; // Try and get from localStorage otherwise create empty array.
 
   function addItem(e) {
     // 1. Prevent submit action from reloading page.
@@ -43,13 +43,16 @@
       done: false,
     };
 
-    // 4. Add/insert newly created Object into items Array
+    // 4. Add/insert newly created Object into items Array.
     items.push(item);
 
     // 5. Invoke populateList function and pass 'items' Array as well as 'itemsList' container element.
     populateList(items, itemsList);
 
-    // 6. Reset form to clear out all fields.
+    // 6. Add items array to Local Storage
+    localStorage.setItem('items', JSON.stringify(items));
+
+    // 7. Reset form to clear out all fields.
     this.reset();
   }
 
@@ -61,10 +64,14 @@
           <label for="item-${i}">${plate.text}</label>
         </li>
       `;
-    }).join('');
+    }).join(''); // Join all Array elements into one single string.
   }
 
+  // Listen for Submit event.
   addItems.addEventListener('submit', addItem);
+
+  // On page load run populateList.
+  populateList(items, itemsList);
 
 </script>
 
