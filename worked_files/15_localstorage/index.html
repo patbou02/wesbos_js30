@@ -30,6 +30,42 @@
   const itemsList = document.querySelector('.plates');
   const items = [];
 
+  function addItem(e) {
+    // 1. Prevent submit action from reloading page.
+    e.preventDefault();
+
+    // 2. Capture entered text.
+    const text = this.querySelector('[name="item"]').value;
+
+    // 3. Create new 'item' Object with captured text from #1 and a boolean 'done' property.
+    const item = {
+      text, // <= ES6 equivalent of 'text: text'
+      done: false,
+    };
+
+    // 4. Add/insert newly created Object into items Array
+    items.push(item);
+
+    // 5. Invoke populateList function and pass 'items' Array as well as 'itemsList' container element.
+    populateList(items, itemsList);
+
+    // 6. Reset form to clear out all fields.
+    this.reset();
+  }
+
+  function populateList(plates = {}, platesList) {
+    platesList.innerHTML = plates.map((plate, i) => {
+      return `
+        <li>
+          <input type="checkbox" data-index="${i}" id="item-${i}" ${plate.done ? 'checked' : ''} />
+          <label for="item-${i}">${plate.text}</label>
+        </li>
+      `;
+    }).join('');
+  }
+
+  addItems.addEventListener('submit', addItem);
+
 </script>
 
 
