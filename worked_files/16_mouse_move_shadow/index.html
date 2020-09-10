@@ -35,6 +35,42 @@
   </style>
 
 <script>
+
+  const hero = document.querySelector('.hero');
+  const text = hero.querySelector('h1');
+  const walk = 100; // maximum distance shadow will stretch when cursor is as far away as possible
+
+  function shadow(e) {
+    // ES6 Destructuring of code below
+    //const width  = hero.offsetWidth;
+    //const height = hero.offsetHeight;
+    // looks like this:
+    const { offsetWidth: width, offsetHeight: height } = hero;
+    let { offsetX: x, offsetY: y } = e; // same as let x = e.offsetX and let y = e.offsetY
+
+    // Prevent x and y coordinates from resetting when hovering over .hero
+    if (this !== e.target) {
+      x = x + e.target.offsetLeft;
+      y = y + e.target.offsetTop;
+    }
+
+    const xWalk = Math.round(x / width * walk) - (walk / 2);
+    const yWalk = Math.round(y / height * walk) - (walk / 2);
+
+    console.log(xWalk, yWalk);
+
+    text.style.textShadow = `
+      ${xWalk}px ${yWalk}px 0 rgba(255, 255, 0, 0.7),
+      ${xWalk * -1}px ${yWalk}px 0 rgba(255, 0, 255, 0.7),
+      ${yWalk}px ${xWalk * -1}px 0 rgba(0, 255, 255, 0.7),
+      ${yWalk * -1}px ${xWalk}px 0 rgba(0, 255, 0, 0.7)
+    `;
+  }
+
+  hero.addEventListener('mousemove', shadow);
+
 </script>
+
+  <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
 </body>
 </html>
