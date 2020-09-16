@@ -62,11 +62,9 @@
   function fixNav() {
     root.style.setProperty('--nav-height', `${nav.offsetHeight}px`);
 
-    if (window.scrollY >= topOfNav) {
-      document.body.classList.add('fixed-nav');
-    } else {
+    (window.scrollY >= topOfNav) ?
+      document.body.classList.add('fixed-nav') :
       document.body.classList.remove('fixed-nav');
-    }
   }
 
   window.addEventListener('scroll', fixNav);
