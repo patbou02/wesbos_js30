@@ -87,6 +87,14 @@ nav a {
   text-transform: uppercase;
 }
 
+:root {
+  --nav-height;
+}
+
+.fixed-nav {
+  padding-top: var(--nav-height);
+}
+
 .fixed-nav .site-wrap {
   transform: scale(1);
 }
