@@ -14,34 +14,45 @@
   </div>
 
 <style>
-  html {
-    box-sizing: border-box;
-  }
+  html { box-sizing: border-box; }
   
-  *, *:before, *:after { 
-    box-sizing: inherit; 
-  }
+  *, *:before, *:after { box-sizing: inherit; }
 
   div {
     width: 100%;
     padding: 100px;
   }
 
-  .one {
-    background: thistle;
-  }
-
-  .two {
-    background: mistyrose;
-  }
-
-  .three {
-    background: coral;
-  }
+  .one { background: thistle; }
+  .two { background: mistyrose; }
+  .three { background: coral; }
 </style>
 
-<button></button>
+<button>Click me</button>
 <script>
+
+  const divs = document.querySelectorAll('div');
+  const button = document.querySelector('button');
+
+  // Capture by default is set to FALSE.
+  // Capture true runs function on capture DOWN (rather than on bubble UP)
+  // Capture false runs the function on bubble UP (rather than on capture DOWN)
+  divs.forEach(div => div.addEventListener('click', logText, {
+    capture: false, // default value
+    once: false, // (once === true) ? as soon as it is clicked once, event will unwind itself
+    // same as if running div.removeEventListener('click', logText);
+  }));
+
+  function logText(e) {
+    console.log(this.classList.value);
+    //e.stopPropagation(); // (capture === true) ? stop capturing down : stop bubbling up
+    // behavior and recorded event will vary based on capture true/false value.
+  }
+
+  button.addEventListener('click', () => {
+    console.log('Click!!!!!');
+  }, { once: true}); // <= this will log once and then no more
+  // can be useful on store checkouts where you don't want users to accidentally click more than once
 
 </script>
 </body>
