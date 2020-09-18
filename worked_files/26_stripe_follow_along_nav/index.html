@@ -80,9 +80,7 @@
     font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif;
   }
   
-  *, *:before, *:after {
-    box-sizing: inherit;
-  }
+  *, *:before, *:after { box-sizing: inherit; }
   
   body {
     margin: 0;
@@ -142,13 +140,9 @@
     display: none;
   }
 
-  .trigger-enter .dropdown {
-    display: block;
-  }
+  .trigger-enter .dropdown { display: block; }
 
-  .trigger-enter-active .dropdown {
-    opacity: 1;
-  }
+  .trigger-enter-active .dropdown { opacity: 1; }
   
   .dropdownBackground {
     width: 100px;
@@ -164,9 +158,7 @@
     opacity:0;
   }
 
-  .dropdownBackground.open {
-    opacity: 1;
-  }
+  .dropdownBackground.open { opacity: 1; }
 
   .arrow {
     position: absolute;
@@ -190,9 +182,7 @@
     margin-right: 20px;
   }
 
-  .courses {
-    min-width: 300px;
-  }
+  .courses { min-width: 300px; }
 
   .courses li {
     padding: 10px 0;
@@ -220,6 +210,63 @@
 </style>
 
 <script>
+  /* == Steps to Solve ==
+   1. Access triggers.
+   2. Add event listeners on triggers for when hovering and when leaving.
+   3. When hovering add classes and when leaving remove classes.
+   4. Add 'open' class to background on hover and remove class when leaving.
+   5. Get dropdown dynamically.
+   6. Get coordinates for the dropdowns dynamically.
+   7. Get coordinates for the navigation.
+   8. Set Object with height and width coordinates to be equal to the dynamic dropdown height and width.
+   9. Set background CSS height and width equal to the Object's width and height property values.
+   10. Add top and left properties to Object and set them to dynamic dropdown's top and left values.
+   11. Set transform CSS translate property to dynamic dropdown.
+   12. Use navigation top and left properties and remove them in the Objects property values to offset any other content which may be pushing the navigation up or down (in this case the H2 on line 8).
+   13. Add a condition if class is contained by menu THIS within setTimeout() to prevent inconsistencies if hovering or leaving too fast between menu dropdowns.
+  */
+
+  // #1
+  const nav        = document.querySelector('.top');
+  const triggers   = document.querySelectorAll('.cool > li');
+  const background = document.querySelector('.dropdownBackground');
+
+  // #2
+  triggers.forEach(trigger => {
+    trigger.addEventListener('mouseenter', handleEnter);
+    trigger.addEventListener('mouseleave', handleLeave);
+  });
+
+  function handleEnter() {
+    this.classList.add('trigger-enter'); // #3
+    setTimeout(() => {
+      if (this.classList.contains('trigger-enter')) { // #13
+        this.classList.add('trigger-enter-active');
+      }
+    }, 150);
+    background.classList.add('open');
+
+    const dropdown = this.querySelector('.dropdown'); // #5
+    const dropdownCoords = dropdown.getBoundingClientRect(); // #6
+    const navCoords = nav.getBoundingClientRect(); // #7
+
+    const coords = {
+      height : dropdownCoords.height, // #8
+      width : dropdownCoords.width, // #8
+      top : dropdownCoords.top - navCoords.top, // #10, 12
+      left : dropdownCoords.left - navCoords.left // #10, 12
+    };
+
+    background.style.setProperty('width', `${coords.width}px`); // #9
+    background.style.setProperty('height', `${coords.height}px`); // #9
+    background.style.setProperty('transform', `translate(${coords.left}px, ${coords.top}px)`);// #11
+  }
+
+  function handleLeave() {
+    this.classList.remove('trigger-enter', 'trigger-enter-active'); // #4 - btw can remove multiple classes like this
+    background.classList.remove('open');
+  }
+
 </script>
 
 </body>
