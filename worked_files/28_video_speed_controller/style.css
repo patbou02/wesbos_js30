@@ -1,3 +1,7 @@
+:root {
+  --speed-bar-height: 10%;
+}
+
 body {
   margin: 0;
   display: flex;
@@ -38,5 +42,5 @@ video {
   justify-content: center;
   padding: 2px;
   color: white;
-  height: 16.3%;
+  height: var(--speed-bar-height);
 }
