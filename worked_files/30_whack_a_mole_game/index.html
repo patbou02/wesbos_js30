@@ -40,11 +40,9 @@
   let timeUp = false;
   let score = 0;
 
-  function randomTime(min, max) {
-    return Math.round(Math.random() * (max - min) + min);
-  }
+  const randomTime = (min, max) => (Math.round(Math.random() * (max - min) + min));
 
-  function randomHole(holes) {
+  const randomHole = (holes) => {
     const idx = Math.ceil(Math.random() * holes.length);
     const hole = holes[idx];
     if (hole === lastHole) {
@@ -54,9 +52,9 @@
 
     lastHole = hole;
     return hole;
-  }
+  };
 
-  function peep() {
+  const peep = () => {
     const time = randomTime(200, 2000);
     const hole = randomHole(holes);
     hole.classList.add('up'); // TODO TypeError: hole is undefined. Need to fix this.
@@ -64,23 +62,22 @@
       hole.classList.remove('up');
       if (!timeUp) peep();
     }, time);
-  }
+  };
 
-  function startGame() {
+  const startGame = () => {
     scoreBoard.textContent = 0;
     timeUp = false;
     score = 0;
     peep();
     setTimeout(() => { timeUp = true }, 10000);
-  }
+  };
 
-  function bonk(e) {
-    console.log(e);
+  const bonk = (e) => {
     if (!e.isTrusted) return; // cheater
     score++;
     this.classList.remove('up');
     scoreBoard.textContent = score;
-  }
+  };
 
   moles.forEach(mole => mole.addEventListener('click', bonk));
 
