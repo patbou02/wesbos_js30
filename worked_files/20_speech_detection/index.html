@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Speech Detection</title>
+</head>
+<body>
+
+  <div class="words" contenteditable>
+  </div>
+
+<script>
+  /*
+   * TODO: -10/3/20 Firefox doesn't support Web Speech API as a result, this only works on Chrome.
+   */
+
+  // TODO: run this thru a server using after a 'npm install' and 'npm start'.
+
+  // Set speech recognition to window.SpeechRecognition regardless of the browser.
+  window.SpeechRecognition = window.speechRecognition || window.webkitSpeechRecognition;
+
+  // 1. New instance.
+  const recognition = new SpeechRecognition();
+
+  // 2. No need to stop speaking in order to see results.
+  recognition.interimResults = true;
+
+  // 3. Create a holding element which will be a <p> and append to parent element.
+  let p = document.createElement('p');
+  const words = document.querySelector('.words');
+  words.appendChild(p);
+
+  // 4. Add event listener which listens for a 'result'.
+  recognition.addEventListener('result', e => {
+    // console.log(e.results);
+    // 6. Convert nested data into string
+    const transcript = Array.from(e.results) // create Array from array-like object
+      .map(result => result[0]) // get first item of the array
+      .map(result => result.transcript) // get 'transcript' property
+      .join(''); // join multiple elements into one when present
+
+    // 8. Update the DOM
+    p.textContent = transcript;
+
+    // 9. prevent updating existing <p> with a new one.
+    if (e.results[0].isFinal) {
+      p = document.createElement('p');
+      words.appendChild(p);
+    }
+    console.log(transcript);
+
+    // TODO: add logic that listens for certain elements and does stuff like get Weather from a Weather API or update content being outputed in the DOM.
+    if (transcript.includes('get the weather')) {
+      console.log('🌧 ☀️ Getting the weather!! ☁️ 🌪');
+    }
+  });
+
+  // 7. Start listening again once it stops detecting audio.
+  recognition.addEventListener('end', recognition.start);
+
+  // 5. Start listening
+  recognition.start();
+
+</script>
+
+
+  <style>
+    html {
+      font-size: 10px;
+    }
+
+    body {
+      background: #ffc600;
+      font-family: 'helvetica neue';
+      font-weight: 200;
+      font-size: 20px;
+    }
+
+    .words {
+      max-width: 500px;
+      margin: 50px auto;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+      padding: 1rem 2rem 1rem 5rem;
+      background: -webkit-gradient(linear, 0 0, 0 100%, from(#d9eaf3), color-stop(4%, #fff)) 0 4px;
+      background-size: 100% 3rem;
+      position: relative;
+      line-height: 3rem;
+    }
+    
+    p {
+      margin: 0 0 3rem;
+    }
+
+    .words:before {
+      content: '';
+      position: absolute;
+      width: 4px;
+      top: 0;
+      left: 30px;
+      bottom: 0;
+      border: 1px solid;
+      border-color: transparent #efe4e4;
+    }
+  </style>
+
+</body>
+</html>
