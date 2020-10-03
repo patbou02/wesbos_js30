@@ -48,6 +48,11 @@
       words.appendChild(p);
     }
     console.log(transcript);
+
+    // TODO: add logic that listens for certain elements and does stuff like get Weather from a Weather API or update content being outputed in the DOM.
+    if (transcript.includes('get the weather')) {
+      console.log('🌧 ☀️ Getting the weather!! ☁️ 🌪');
+    }
   });
 
   // 7. Start listening again once it stops detecting audio.
