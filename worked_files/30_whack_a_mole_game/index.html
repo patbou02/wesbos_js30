@@ -33,9 +33,59 @@
   </div>
 
 <script>
-  const holes = document.querySelectorAll('.hole');
+  const holes      = document.querySelectorAll('.hole');
+  const moles      = document.querySelectorAll('.mole');
   const scoreBoard = document.querySelector('.score');
-  const moles = document.querySelectorAll('.mole');
+  let lastHole;
+  let timeUp = false;
+  let score = 0;
+
+  function randomTime(min, max) {
+    return Math.round(Math.random() * (max - min) + min);
+  }
+
+  function randomHole(holes) {
+    const idx = Math.ceil(Math.random() * holes.length);
+    const hole = holes[idx];
+    if (hole === lastHole) {
+      console.log("Ahh nah! that's the same hole! Try again!");
+      return randomHole(holes);
+    }
+
+    lastHole = hole;
+    return hole;
+  }
+
+  function peep() {
+    const time = randomTime(200, 2000);
+    const hole = randomHole(holes);
+    hole.classList.add('up'); // TODO TypeError: hole is undefined. Need to fix this.
+    setTimeout(() => {
+      hole.classList.remove('up');
+      if (!timeUp) peep();
+    }, time);
+  }
+
+  function startGame() {
+    scoreBoard.textContent = 0;
+    timeUp = false;
+    score = 0;
+    peep();
+    setTimeout(() => { timeUp = true }, 10000);
+  }
+
+  function bonk(e) {
+    console.log(e);
+    if (!e.isTrusted) return; // cheater
+    score++;
+    this.classList.remove('up');
+    scoreBoard.textContent = score;
+  }
+
+  moles.forEach(mole => mole.addEventListener('click', bonk));
+
+  // TODO: 1. Add 'all time' score board that's saved in local storage.
+  // TODO: 2. Add levels where more than 1 moles come out at the same time or random time is shorter and faster.
 
 </script>
 </body>
